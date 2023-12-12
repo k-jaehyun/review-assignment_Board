@@ -10,6 +10,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.SimpleTimeZone;
 
 @RestController
 @RequestMapping("/api/users")
@@ -30,5 +31,10 @@ public class UserContoroller {
         String signupedNickname = userService.signup(requestDto);
 
         return ResponseEntity.ok().body(new CommonResponseDto(signupedNickname+"님, 회원가입 완료!", HttpStatus.OK.value()));
+    }
+
+    @GetMapping("/signup/{nickname}")
+    public String checkNickname(@PathVariable String nickname) {
+        return userService.checkNickName(nickname);
     }
 }

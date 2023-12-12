@@ -37,4 +37,12 @@ public class UserService {
 
         return newNickname;
     }
+
+    public String checkNickName(String nickname) {
+        if(userRepository.findByNickname(nickname).isEmpty()) {
+            return "사용 가능한 닉네임";
+        } else {
+            return "사용 중인 닉네임";
+        }
+    }
 }
