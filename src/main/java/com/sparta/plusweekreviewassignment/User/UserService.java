@@ -1,6 +1,7 @@
 package com.sparta.plusweekreviewassignment.User;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
 
     public String signup(SignupRequestDto requestDto) {
@@ -31,7 +33,7 @@ public class UserService {
         }
 
         // User 저장
-        userRepository.save(new User(newNickname,newPassword));
+        userRepository.save(new User(newNickname,passwordEncoder.encode(newPassword)));
 
         return newNickname;
     }
