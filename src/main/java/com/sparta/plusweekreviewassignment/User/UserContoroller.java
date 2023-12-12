@@ -1,6 +1,8 @@
 package com.sparta.plusweekreviewassignment.User;
 
 import com.sparta.plusweekreviewassignment.CommonResponseDto;
+import com.sparta.plusweekreviewassignment.exception.fieldError.FieldErrorDto;
+import com.sparta.plusweekreviewassignment.exception.fieldError.FieldErrorException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -10,7 +12,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.SimpleTimeZone;
 
 @RestController
 @RequestMapping("/api/users")
@@ -24,7 +25,8 @@ public class UserContoroller {
         // validation검증
         List<FieldError> fieldErrorList = bindingResult.getFieldErrors();
         if (!fieldErrorList.isEmpty()) {
-            return ResponseEntity.badRequest().body(new CommonResponseDto("입력값 오류",HttpStatus.BAD_REQUEST.value()));
+            List<FieldErrorDto> fieldErrorDtoList = fieldErrorList.stream().map(FieldErrorDto::new).toList();
+            throw new FieldErrorException("허용되지 않은 입력값입니다.",HttpStatus.BAD_REQUEST.value(),fieldErrorDtoList);
         }
 
         // 회원가입 로직
