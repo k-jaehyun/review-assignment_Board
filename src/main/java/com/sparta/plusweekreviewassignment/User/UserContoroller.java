@@ -1,8 +1,11 @@
 package com.sparta.plusweekreviewassignment.User;
 
 import com.sparta.plusweekreviewassignment.CommonResponseDto;
+import com.sparta.plusweekreviewassignment.User.dto.LoginRequestDto;
+import com.sparta.plusweekreviewassignment.User.dto.SignupRequestDto;
 import com.sparta.plusweekreviewassignment.exception.fieldError.FieldErrorDto;
 import com.sparta.plusweekreviewassignment.exception.fieldError.FieldErrorException;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +23,7 @@ public class UserContoroller {
 
     private final UserService userService;
 
+    // 회원가입
     @PostMapping("/signup")
     public ResponseEntity<CommonResponseDto> signup(@Valid @RequestBody SignupRequestDto requestDto, BindingResult bindingResult) {
         // validation검증
@@ -35,8 +39,16 @@ public class UserContoroller {
         return ResponseEntity.ok().body(new CommonResponseDto(signupedNickname+"님, 회원가입 완료!", HttpStatus.OK.value()));
     }
 
+    // nickname 중복여부 확인
     @GetMapping("/signup/{nickname}")
     public String checkNickname(@PathVariable String nickname) {
         return userService.checkNickName(nickname);
+    }
+
+    // 로그인
+    @PostMapping("/login")
+    public ResponseEntity<CommonResponseDto> login(@RequestBody LoginRequestDto requestDto, HttpServletResponse response) {
+        userService.login(requestDto, response);
+        return ResponseEntity.ok().body(new CommonResponseDto(requestDto.getNickname()+"님, 환영합니다!", HttpStatus.OK.value()));
     }
 }

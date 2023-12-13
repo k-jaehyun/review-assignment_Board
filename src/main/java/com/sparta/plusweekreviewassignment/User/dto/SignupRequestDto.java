@@ -1,7 +1,5 @@
-package com.sparta.plusweekreviewassignment.User;
+package com.sparta.plusweekreviewassignment.User.dto;
 
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -16,10 +14,8 @@ public class SignupRequestDto {
     private String nickname;
 
     @Size(min = 4, message = "최소 4자 이상 입력")
-    @NotBlank
     private String password;
 
-    @NotBlank
     private String passwordCheck;
 
 }

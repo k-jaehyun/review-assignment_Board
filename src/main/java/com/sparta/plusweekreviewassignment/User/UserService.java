@@ -1,5 +1,10 @@
 package com.sparta.plusweekreviewassignment.User;
 
+import com.sparta.plusweekreviewassignment.User.dto.LoginRequestDto;
+import com.sparta.plusweekreviewassignment.User.dto.SignupRequestDto;
+import com.sparta.plusweekreviewassignment.jwt.JwtUtil;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -10,6 +15,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
 
     public String signup(SignupRequestDto requestDto) {
@@ -44,5 +50,19 @@ public class UserService {
         } else {
             return "사용 중인 닉네임";
         }
+    }
+
+    // 로그인
+    public void login(LoginRequestDto requestDto, HttpServletResponse response) {
+        // 아이디, 패스워드 확인
+        User user = userRepository.findByNickname(requestDto.getNickname()).orElse(null);
+        if (user==null || !(passwordEncoder.matches(requestDto.getPassword(), user.getPassword()))) {
+            throw new IllegalArgumentException("닉네임 또는 패스워드를 확인해주세요");
+        }
+
+        // 토큰 발급, 쿠키 생성, 쿠키를 헤더에 전달
+        String bearerToken = jwtUtil.createToken(user.getNickname());
+        Cookie cookie = jwtUtil.addJwtToCookie(bearerToken);
+        response.addCookie(cookie);
     }
 }
