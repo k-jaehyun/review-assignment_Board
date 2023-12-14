@@ -5,13 +5,13 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class PostResponseDto {
+public class PostListResponseDto {
 
     private String title;
     private String nickname;
     private LocalDateTime createdAt;
 
-    public PostResponseDto(Post post) {
+    public PostListResponseDto(Post post) {
         this.title = post.getTitle();
         this.nickname = post.getUser().getNickname();
         this.createdAt = post.getCreatedAt();
