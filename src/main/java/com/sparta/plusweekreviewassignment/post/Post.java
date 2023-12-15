@@ -29,6 +29,10 @@ public class Post {
     @Column
     private LocalDateTime createdAt;
 
+    @Lob
+    @Column(name = "image", columnDefinition = "LONGBLOB")
+    private byte[] image;
+
     public Post(PostRequestDto postRequestDto, User user) {
         this.title = postRequestDto.getTitle();
         this.content = postRequestDto.getContent();
@@ -36,4 +40,11 @@ public class Post {
         this.createdAt = LocalDateTime.now();
     }
 
+    public Post(String title, String content, byte[] imageByte, User user) {
+        this.title = title;
+        this.content = content;
+        this.user = user;
+        this.createdAt = LocalDateTime.now();
+        this.image=imageByte;
+    }
 }
