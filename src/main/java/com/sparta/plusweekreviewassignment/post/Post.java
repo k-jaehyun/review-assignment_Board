@@ -16,10 +16,10 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(length = 500)
     private String title;
 
-    @Column
+    @Column(length = 5000)
     private String content;
 
     @ManyToOne
@@ -29,10 +29,10 @@ public class Post {
     @Column
     private LocalDateTime createdAt;
 
-    public Post(PostRequestDto postRequestDto) {
+    public Post(PostRequestDto postRequestDto, User user) {
         this.title = postRequestDto.getTitle();
         this.content = postRequestDto.getContent();
-        this.user = new User(1L, "asd","asd");
+        this.user = user;
         this.createdAt = LocalDateTime.now();
     }
 
