@@ -63,7 +63,7 @@ public class PostController {
 
     // 게시글 리스트를 Paging 조회
     @GetMapping("/page")
-    public Page<PostListResponseDto> getPostListPaging(
+    public List<PostListResponseDto> getPostListPaging(
             @RequestParam("page") int page,
             @RequestParam("size") int size,
             @RequestParam("sortBy") String sortBy,  // title, createdAt 등등

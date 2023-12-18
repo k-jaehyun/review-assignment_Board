@@ -69,14 +69,14 @@ public class PostService {
         return postRepository.findAllByOrderByCreatedAtDesc().stream().map(PostListResponseDto::new).toList();
     }
 
-    public Page<PostListResponseDto> getPostListPaging(int page, int size, String sortBy, boolean isAsc) {
+    public List<PostListResponseDto> getPostListPaging(int page, int size, String sortBy, boolean isAsc) {
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageable = PageRequest.of(page,size,sort);
 
         Page<Post> postList = postRepository.findAll(pageable);
 
-        return postList.map(PostListResponseDto::new);
+        return postList.map(PostListResponseDto::new).getContent();
     }
 
     // 게시글 조회
