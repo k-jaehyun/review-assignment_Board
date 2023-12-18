@@ -79,12 +79,20 @@ public class PostService {
         return postList.map(PostListResponseDto::new);
     }
 
+    // 게시글 조회
+    public PostResponseDto getPost(Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow(
+                ()-> new IllegalArgumentException("선택한 게시물이 존재하지 않습니다."));
+
+        return new PostResponseDto(post);
+    }
+
     // 이미지 받아오는 메서드
     private byte[] imageToByteArray(MultipartFile imageFile) {
         try {
             return imageFile.getBytes();
         } catch (IOException e) {
-            throw new RuntimeException("이미지를 변환 실패.", e);
+            throw new RuntimeException("이미지 변환 실패.");
         }
     }
 }

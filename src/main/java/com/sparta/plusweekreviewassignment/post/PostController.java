@@ -49,16 +49,19 @@ public class PostController {
             @CookieValue(JwtUtil.AUTHORIZATION_HEADER) String value) {
 
         postService.createPostWithImage(imageFile,title, content, value);
-        return ResponseEntity.ok().body(new CommonResponseDto("게시되었습니다.", HttpStatus.CREATED.value()));
+        return ResponseEntity.ok().body(
+                new CommonResponseDto("게시되었습니다.", HttpStatus.CREATED.value())
+        );
     }
 
-
+    // 게시글 리스트 조회
     @GetMapping("")
     public ResponseEntity<List<PostListResponseDto>> getPostList() {
         List<PostListResponseDto> responseDtoList = postService.getPostList();
         return ResponseEntity.ok().body(new ArrayList<>(responseDtoList));
     }
 
+    // 게시글 리스트를 Paging 조회
     @GetMapping("/page")
     public Page<PostListResponseDto> getPostListPaging(
             @RequestParam("page") int page,
@@ -66,6 +69,13 @@ public class PostController {
             @RequestParam("sortBy") String sortBy,  // title, createdAt 등등
             @RequestParam("isAsc") boolean isAsc) {
         return postService.getPostListPaging(page-1, size, sortBy, isAsc);
+    }
+
+    // 게시글 조회
+    @GetMapping("{postId}")
+    public ResponseEntity<PostResponseDto> getPost(@PathVariable Long postId) {
+        PostResponseDto postResponseDto = postService.getPost(postId);
+        return ResponseEntity.ok().body(postResponseDto);
     }
 
 
