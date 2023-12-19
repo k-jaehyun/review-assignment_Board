@@ -1,6 +1,7 @@
 package com.sparta.plusweekreviewassignment.post;
 
 import com.sparta.plusweekreviewassignment.User.User;
+import com.sparta.plusweekreviewassignment.post.dto.PostRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

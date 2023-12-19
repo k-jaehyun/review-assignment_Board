@@ -1,5 +1,6 @@
-package com.sparta.plusweekreviewassignment.post;
+package com.sparta.plusweekreviewassignment.post.dto;
 
+import com.sparta.plusweekreviewassignment.post.Post;
 import lombok.Getter;
 
 import java.time.LocalDateTime;

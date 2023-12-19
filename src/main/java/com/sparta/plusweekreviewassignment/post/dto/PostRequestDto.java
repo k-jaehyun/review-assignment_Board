@@ -1,4 +1,4 @@
-package com.sparta.plusweekreviewassignment.post;
+package com.sparta.plusweekreviewassignment.post.dto;
 
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
