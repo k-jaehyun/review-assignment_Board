@@ -47,4 +47,16 @@ public class Post {
         this.createdAt = LocalDateTime.now();
         this.image=imageByte;
     }
+
+    public Post modify(PostRequestDto requestDto) {
+        this.title=requestDto.getTitle();
+        this.content=requestDto.getContent();
+        return this;
+    }
+
+    public void modifyWithImage(byte[] imageByte, String title, String content) {
+        this.title=title;
+        this.content=content;
+        this.image=imageByte;
+    }
 }

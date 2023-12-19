@@ -6,7 +6,6 @@ import com.sparta.plusweekreviewassignment.exception.fieldError.FieldErrorExcept
 import com.sparta.plusweekreviewassignment.jwt.JwtUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -75,6 +74,28 @@ public class PostController {
     @GetMapping("{postId}")
     public ResponseEntity<PostResponseDto> getPost(@PathVariable Long postId) {
         PostResponseDto postResponseDto = postService.getPost(postId);
+        return ResponseEntity.ok().body(postResponseDto);
+    }
+
+    // 게시글 수정
+    @PatchMapping("{postId}")
+    public ResponseEntity<PostResponseDto> modifyPost(@PathVariable Long postId,
+                                                      @RequestBody PostRequestDto requestDto,
+                                                      @CookieValue(JwtUtil.AUTHORIZATION_HEADER) String value) {
+        PostResponseDto postResponseDto = postService.modifyPost(postId,requestDto,value);
+        return ResponseEntity.ok().body(postResponseDto);
+    }
+
+    // 이미지 포함 게시글 수정
+    @PutMapping("/{postId}")
+    public ResponseEntity<PostResponseDto> modifyPostWithImage(
+            @PathVariable Long postId,
+            @RequestParam("image")MultipartFile imageFile,
+            @RequestParam("title") String title,
+            @RequestParam("content") String content,
+            @CookieValue(JwtUtil.AUTHORIZATION_HEADER) String value) {
+
+        PostResponseDto postResponseDto = postService.modifyPostWithImage(postId,imageFile,title, content, value);
         return ResponseEntity.ok().body(postResponseDto);
     }
 
