@@ -1,17 +1,16 @@
 package com.sparta.plusweekreviewassignment.post;
 
 import com.sparta.plusweekreviewassignment.User.User;
+import com.sparta.plusweekreviewassignment.common.Timestamped;
 import com.sparta.plusweekreviewassignment.post.dto.PostRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Entity(name = "post")
 @Getter
 @NoArgsConstructor
-public class Post {
+public class Post extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,8 +26,6 @@ public class Post {
     @JoinColumn (name = "user_id")
     private User user;
 
-    @Column
-    private LocalDateTime createdAt;
 
     @Lob
     @Column(name = "image", columnDefinition = "LONGBLOB")
@@ -38,14 +35,12 @@ public class Post {
         this.title = postRequestDto.getTitle();
         this.content = postRequestDto.getContent();
         this.user = user;
-        this.createdAt = LocalDateTime.now();
     }
 
     public Post(String title, String content, byte[] imageByte, User user) {
         this.title = title;
         this.content = content;
         this.user = user;
-        this.createdAt = LocalDateTime.now();
         this.image=imageByte;
     }
 

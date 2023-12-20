@@ -12,10 +12,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -118,6 +120,10 @@ public class PostService {
         postRepository.delete(post);
     }
 
+
+
+
+
     // 해당 사용자가 작성한 게시글인지 확인
     private void validatePostUser(Post post, String nickname) {
         if (!post.getUser().getNickname().equals(nickname)) {
@@ -145,4 +151,14 @@ public class PostService {
             throw new RuntimeException("이미지 변환 실패.");
         }
     }
+
+
+    // 수정된지 90일이 지난 데이터는 자동으로 지우는 스케줄러 기능
+    @Transactional
+    @Scheduled(fixedRate = 60 * 1000) // 1분에 한번 작동
+    public void cleanupPost() {
+        LocalDateTime before90Days = LocalDateTime.now().minusDays(90);  // 요구사항은 "90일이 지난" 이었으므로 지금으로부터 90일을 셈했습니다.
+        postRepository.deleteByModifiedAtBefore(before90Days);
+    }
+
 }
