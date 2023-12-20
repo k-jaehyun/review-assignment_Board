@@ -1,4 +1,4 @@
-package com.sparta.plusweekreviewassignment;
+package com.sparta.plusweekreviewassignment.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

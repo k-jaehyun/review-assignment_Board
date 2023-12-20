@@ -1,6 +1,6 @@
 package com.sparta.plusweekreviewassignment.post;
 
-import com.sparta.plusweekreviewassignment.CommonResponseDto;
+import com.sparta.plusweekreviewassignment.common.CommonResponseDto;
 import com.sparta.plusweekreviewassignment.exception.fieldError.FieldErrorDto;
 import com.sparta.plusweekreviewassignment.exception.fieldError.FieldErrorException;
 import com.sparta.plusweekreviewassignment.jwt.JwtUtil;
@@ -102,6 +102,13 @@ public class PostController {
         return ResponseEntity.ok().body(postResponseDto);
     }
 
+    // 게시글 삭제
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<CommonResponseDto> deletePost(@PathVariable Long postId,
+                                                        @CookieValue(JwtUtil.AUTHORIZATION_HEADER) String value) {
+        postService.deletePost(postId, value);
+        return ResponseEntity.ok().body(new CommonResponseDto("게시글이 삭제되었습니다.",HttpStatus.OK.value()));
+    }
 
 
 }

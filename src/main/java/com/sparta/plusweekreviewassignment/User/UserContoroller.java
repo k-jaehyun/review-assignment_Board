@@ -1,6 +1,6 @@
 package com.sparta.plusweekreviewassignment.User;
 
-import com.sparta.plusweekreviewassignment.CommonResponseDto;
+import com.sparta.plusweekreviewassignment.common.CommonResponseDto;
 import com.sparta.plusweekreviewassignment.User.dto.LoginRequestDto;
 import com.sparta.plusweekreviewassignment.User.dto.SignupRequestDto;
 import com.sparta.plusweekreviewassignment.exception.fieldError.FieldErrorDto;

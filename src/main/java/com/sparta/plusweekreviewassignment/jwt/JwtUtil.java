@@ -1,6 +1,5 @@
 package com.sparta.plusweekreviewassignment.jwt;
 
-import com.sparta.plusweekreviewassignment.exception.NotFoundException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -68,7 +67,7 @@ public class JwtUtil {
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
             return bearerToken.substring(7);
         }
-        throw new NotFoundException("Not Found Token");
+        throw new IllegalArgumentException("Not Found Token");
     }
 
     public boolean validateToken(String token) {

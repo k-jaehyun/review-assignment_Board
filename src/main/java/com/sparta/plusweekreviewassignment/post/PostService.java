@@ -27,17 +27,10 @@ public class PostService {
     private final UserRepository userRepository;
 
     // 이미지 없이 포스팅
-    public void createPost(PostRequestDto postRequestDto, String tokenValue) {
-        // 쿠키에서 받아온 헤더의 Bearer토큰 substring
-        String token = jwtUtil.substringBearerToken(tokenValue);
-        // 토큰 검증
-        if (!jwtUtil.validateToken(token)) {
-            throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
-        }
-        // 토큰에서 nickname 가져오기
-        String nickname = jwtUtil.getUsernameFromToken(token);
+    public void createPost(PostRequestDto postRequestDto, String value) {
+        String nickname = getNicknameFromToken(value);
 
-        // username 검증
+        // username으로 user 받아옴
         User user = userRepository.findByNickname(nickname).orElseThrow(
                 () -> new IllegalArgumentException("토큰의 nickname은 존재하지 않는 유저입니다.")
         );
@@ -48,17 +41,10 @@ public class PostService {
     }
 
     // 이미지와 함께 포스팅
-    public void createPostWithImage(MultipartFile imageFile, String title, String content, String tokenValue) {
-        // 쿠키에서 받아온 헤더의 Bearer토큰 substring
-        String token = jwtUtil.substringBearerToken(tokenValue);
-        // 토큰 검증
-        if (!jwtUtil.validateToken(token)) {
-            throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
-        }
-        // 토큰에서 nickname 가져오기
-        String nickname = jwtUtil.getUsernameFromToken(token);
+    public void createPostWithImage(MultipartFile imageFile, String title, String content, String value) {
+        String nickname = getNicknameFromToken(value);
 
-        // username 검증
+        // username으로 user 받아옴
         User user = userRepository.findByNickname(nickname).orElseThrow(
                 () -> new IllegalArgumentException("토큰의 nickname은 존재하지 않는 유저입니다.")
         );
@@ -94,24 +80,12 @@ public class PostService {
     // 게시글 수정
     @Transactional
     public PostResponseDto modifyPost(Long postId, PostRequestDto requestDto, String value) {
-        // 쿠키에서 받아온 헤더의 Bearer토큰 substring
-        String token = jwtUtil.substringBearerToken(value);
-        // 토큰 검증
-        if (!jwtUtil.validateToken(token)) {
-            throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
-        }
-        // 토큰에서 nickname 가져오기
-        String nickname = jwtUtil.getUsernameFromToken(token);
+        String nickname = getNicknameFromToken(value);
 
-        // 게시글 존재여부 확인
         Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
 
-        // 해당 사용자가 작성한 게시글인지 확인
-        if (!post.getUser().getNickname().equals(nickname)) {
-            throw new IllegalArgumentException("해당 사용자가 작성한 게시글이 아닙니다.");
-        }
+        validatePostUser(post, nickname);
 
-        // 게시글 수정
         Post modifiedPost = post.modify(requestDto);
 
         return new PostResponseDto(modifiedPost);
@@ -120,28 +94,47 @@ public class PostService {
     // 이미지 포함 게시글 수정
     @Transactional
     public PostResponseDto modifyPostWithImage(Long postId, MultipartFile imageFile, String title, String content, String value) {
-        // 쿠키에서 받아온 헤더의 Bearer토큰 substring
-        String token = jwtUtil.substringBearerToken(value);
-        // 토큰 검증
-        if (!jwtUtil.validateToken(token)) {
-            throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
-        }
-        // 토큰에서 nickname 가져오기
-        String nickname = jwtUtil.getUsernameFromToken(token);
-
-        // 게시글 존재여부 확인
+        String nickname = getNicknameFromToken(value);
+        
         Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
 
-        // 해당 사용자가 작성한 게시글인지 확인
-        if (!post.getUser().getNickname().equals(nickname)) {
-            throw new IllegalArgumentException("해당 사용자가 작성한 게시글이 아닙니다.");
-        }
+        validatePostUser(post, nickname);
 
         byte[] imageByte = imageToByteArray(imageFile);
 
         post.modifyWithImage(imageByte,title,content);
 
         return new PostResponseDto(post,imageByte);
+    }
+
+    // 게시글 삭제
+    public void deletePost(Long postId, String value) {
+        String nickname = getNicknameFromToken(value);
+
+        Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
+
+        validatePostUser(post, nickname);
+
+        postRepository.delete(post);
+    }
+
+    // 해당 사용자가 작성한 게시글인지 확인
+    private void validatePostUser(Post post, String nickname) {
+        if (!post.getUser().getNickname().equals(nickname)) {
+            throw new IllegalArgumentException("해당 사용자가 작성한 게시글이 아닙니다.");
+        }
+    }
+
+    // 토큰에서 nickname 가져오기
+    private String getNicknameFromToken(String value) {
+        // 쿠키에서 받아온 헤더의 Bearer토큰 substring
+        String token = jwtUtil.substringBearerToken(value);
+        // 토큰 검증
+        if (!jwtUtil.validateToken(token)) {
+            throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
+        }
+        String nickname = jwtUtil.getUsernameFromToken(token);
+        return nickname;
     }
 
     // 이미지 받아오는 메서드
