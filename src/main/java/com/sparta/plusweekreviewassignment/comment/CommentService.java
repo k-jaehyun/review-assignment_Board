@@ -15,7 +15,8 @@ public class CommentService {
     private final PostRepository postRepository;
 
     public void addCommnet(CommentRequestDto requestDto, Long postId, String value) {
-        jwtUtil.validateToken(value);
+        String token = jwtUtil.substringBearerToken(value);
+        jwtUtil.validateToken(token);
         Post post = postRepository.findById(postId).orElseThrow(()
                 -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
         Comment comment = new Comment(requestDto,post);
