@@ -2,7 +2,9 @@ package com.sparta.plusweekreviewassignment.User;
 
 import com.sparta.plusweekreviewassignment.User.dto.LoginRequestDto;
 import com.sparta.plusweekreviewassignment.User.dto.SignupRequestDto;
-import com.sparta.plusweekreviewassignment.User.emailAuth.AuthService;
+import com.sparta.plusweekreviewassignment.User.emailAuth.EmailAuth;
+import com.sparta.plusweekreviewassignment.User.emailAuth.EmailAuthRepository;
+import com.sparta.plusweekreviewassignment.User.emailAuth.EmailAuthService;
 import com.sparta.plusweekreviewassignment.jwt.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,9 +19,10 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
-    private final AuthService authService;
+    private final EmailAuthService emailAuthService;
+    private final EmailAuthRepository emailAuthRepository;
 
-    public String signup(SignupRequestDto requestDto) {
+    public void signup(SignupRequestDto requestDto) {
         String newNickname= requestDto.getNickname();
         String newPassword= requestDto.getPassword();
         String newPasswordCheck= requestDto.getPasswordCheck();
@@ -41,12 +44,24 @@ public class UserService {
         }
 
         // 인증번호 메일 보내기
-        authService.sendVerificationCode(email);
+        String sentCode = emailAuthService.sendVerificationCode(email);
+        emailAuthRepository.save(new EmailAuth(sentCode, newNickname, passwordEncoder.encode(newPassword), email));
+    }
 
-        // User 저장
-        userRepository.save(new User(newNickname,passwordEncoder.encode(newPassword)));
+    // 이메일 인증 및 User 생성
+    public String verificateCode(String email, String verificateCode) {
+        var emailAuth = emailAuthRepository.findByEmail(email).orElseThrow(()
+                -> new IllegalArgumentException("인증 가능한 이메일 주소가 아닙니다."));
+        String nickname = emailAuth.getNickname();
+        String password = emailAuth.getPassword();
 
-        return newNickname;
+        emailAuthService.verifyVerificationCode(email,verificateCode);
+
+        userRepository.save(new User(nickname,password,email));
+
+        //인증 완료되면 삭제
+        emailAuthRepository.delete(emailAuth);
+        return nickname;
     }
 
     public String checkNickName(String nickname) {

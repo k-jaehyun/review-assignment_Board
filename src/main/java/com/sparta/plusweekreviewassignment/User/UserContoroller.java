@@ -33,10 +33,17 @@ public class UserContoroller {
             throw new FieldErrorException("허용되지 않은 입력값입니다.",HttpStatus.BAD_REQUEST.value(),fieldErrorDtoList);
         }
 
-        // 회원가입 로직
-        String signupedNickname = userService.signup(requestDto);
+        // 회원가입 로직 (인증 메일 발송)
+        userService.signup(requestDto);
 
-        return ResponseEntity.ok().body(new CommonResponseDto(signupedNickname+"님, 회원가입 완료!", HttpStatus.OK.value()));
+        return ResponseEntity.ok().body(new CommonResponseDto("인증번호를 입력해주세요!", HttpStatus.OK.value()));
+    }
+
+    @GetMapping("/signup/email/{email}/code/{verificationCode}")
+    public ResponseEntity<CommonResponseDto> verificateCode(@PathVariable String email,
+                                                            @PathVariable String verificationCode) {
+        String nickname = userService.verificateCode(email, verificationCode);
+        return ResponseEntity.ok().body(new CommonResponseDto(nickname+"님 회원가입 완료.",HttpStatus.OK.value()));
     }
 
     // nickname 중복여부 확인
