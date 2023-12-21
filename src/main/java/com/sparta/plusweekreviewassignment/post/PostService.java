@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -155,9 +156,9 @@ public class PostService {
 
     // 수정된지 90일이 지난 데이터는 자동으로 지우는 스케줄러 기능
     @Transactional
-    @Scheduled(fixedRate = 60 * 1000) // 1분에 한번 작동
+    @Scheduled(cron = "0 0 0 * * *") // 매일 00시에 작동
     public void cleanupPost() {
-        LocalDateTime before90Days = LocalDateTime.now().minusDays(90);  // 요구사항은 "90일이 지난" 이었으므로 지금으로부터 90일을 셈했습니다.
+        LocalDateTime before90Days = LocalDate.now().minusDays(90).atStartOfDay();  // 매일 자정을 기준으로 90일이 지났으면 삭제
         postRepository.deleteByModifiedAtBefore(before90Days);
     }
 
