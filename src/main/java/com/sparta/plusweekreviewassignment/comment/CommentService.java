@@ -52,6 +52,20 @@ public class CommentService {
         return commentRepository.findByPost(post).stream().map(CommentResponseDto::new).toList();
     }
 
+    // 댓글 삭제
+    public void deleteComment(Long postId, Long commentId, String value) {
+        User user = getUserFromToken(value);
+        postRepository.findById(postId).orElseThrow(()
+                -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
+        Comment comment = commentRepository.findById(commentId).orElseThrow(()
+                -> new IllegalArgumentException("존재하지 않는 댓글입니다."));
+        if (!comment.getUser().getNickname().equals(user.getNickname())) {
+            throw new IllegalArgumentException("댓글 작성자만 삭제 할 수 있습니다.");
+        }
+
+        commentRepository.delete(comment);
+    }
+
     // 토큰에서 user 가져오기
     private User getUserFromToken(String value) {
         // 쿠키에서 받아온 헤더의 Bearer토큰 substring

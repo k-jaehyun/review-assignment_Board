@@ -40,4 +40,12 @@ public class CommentController {
         List<CommentResponseDto> commentResponseDtoList = commentService.modifyComment(requestDto,postId,commentId,value);
         return ResponseEntity.ok().body(commentResponseDtoList);
     }
+
+    @DeleteMapping("{commentId}")
+    public ResponseEntity<CommonResponseDto> deleteComment(@PathVariable Long postId,
+                                                           @PathVariable Long commentId,
+                                                           @CookieValue(JwtUtil.AUTHORIZATION_HEADER) String value) {
+        commentService.deleteComment(postId,commentId,value);
+        return ResponseEntity.ok().body(new CommonResponseDto("삭제되었습니다.",HttpStatus.OK.value()));
+    }
 }
