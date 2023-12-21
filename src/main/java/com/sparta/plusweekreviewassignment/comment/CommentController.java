@@ -15,7 +15,9 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("")
-    public ResponseEntity<CommonResponseDto> addComment(@RequestBody CommentRequestDto requestDto, @PathVariable Long postId, @CookieValue(JwtUtil.AUTHORIZATION_HEADER) String value) {
+    public ResponseEntity<CommonResponseDto> addComment(@RequestBody CommentRequestDto requestDto,
+                                                        @PathVariable Long postId,
+                                                        @CookieValue(JwtUtil.AUTHORIZATION_HEADER) String value) {
         commentService.addCommnet(requestDto,postId,value);
         return ResponseEntity.ok().body(new CommonResponseDto("댓글 작성 완료", HttpStatus.CREATED.value()));
     }
