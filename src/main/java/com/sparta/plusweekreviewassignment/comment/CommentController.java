@@ -32,4 +32,12 @@ public class CommentController {
         return ResponseEntity.ok().body(commentResponseDtoList);
     }
 
+    @PatchMapping("{commentId}")
+    public ResponseEntity<List<CommentResponseDto>> modifyComment(@RequestBody CommentRequestDto requestDto,
+                                                                  @PathVariable Long postId,
+                                                                  @PathVariable Long commentId,
+                                                                  @CookieValue(JwtUtil.AUTHORIZATION_HEADER) String value) {
+        List<CommentResponseDto> commentResponseDtoList = commentService.modifyComment(requestDto,postId,commentId,value);
+        return ResponseEntity.ok().body(commentResponseDtoList);
+    }
 }
