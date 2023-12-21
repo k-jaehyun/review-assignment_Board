@@ -1,5 +1,6 @@
 package com.sparta.plusweekreviewassignment.User.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -17,5 +18,8 @@ public class SignupRequestDto {
     private String password;
 
     private String passwordCheck;
+
+    @Email
+    private String email;
 
 }

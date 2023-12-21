@@ -2,6 +2,7 @@ package com.sparta.plusweekreviewassignment.User;
 
 import com.sparta.plusweekreviewassignment.User.dto.LoginRequestDto;
 import com.sparta.plusweekreviewassignment.User.dto.SignupRequestDto;
+import com.sparta.plusweekreviewassignment.User.emailAuth.AuthService;
 import com.sparta.plusweekreviewassignment.jwt.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,12 +17,13 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
-
+    private final AuthService authService;
 
     public String signup(SignupRequestDto requestDto) {
         String newNickname= requestDto.getNickname();
         String newPassword= requestDto.getPassword();
         String newPasswordCheck= requestDto.getPasswordCheck();
+        String email = requestDto.getEmail();
 
         // nickname 중복여부 확인
         if(!userRepository.findByNickname(newNickname).isEmpty()) {
@@ -37,6 +39,9 @@ public class UserService {
         if (!newPassword.equals(newPasswordCheck)) {
             throw  new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
+
+        // 인증번호 메일 보내기
+        authService.sendVerificationCode(email);
 
         // User 저장
         userRepository.save(new User(newNickname,passwordEncoder.encode(newPassword)));
