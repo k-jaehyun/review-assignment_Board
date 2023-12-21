@@ -1,11 +1,16 @@
 package com.sparta.plusweekreviewassignment.post;
 
 import com.sparta.plusweekreviewassignment.User.User;
+import com.sparta.plusweekreviewassignment.comment.Comment;
 import com.sparta.plusweekreviewassignment.common.Timestamped;
+import com.sparta.plusweekreviewassignment.likes.Likes;
 import com.sparta.plusweekreviewassignment.post.dto.PostRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity(name = "post")
 @Getter
@@ -26,10 +31,12 @@ public class Post extends Timestamped {
     @JoinColumn (name = "user_id")
     private User user;
 
-
     @Lob
     @Column(name = "image", columnDefinition = "LONGBLOB")
     private byte[] image;
+
+    @OneToMany(mappedBy = "post")
+    private Set<Comment> comments = new HashSet<>();
 
     public Post(PostRequestDto postRequestDto, User user) {
         this.title = postRequestDto.getTitle();
