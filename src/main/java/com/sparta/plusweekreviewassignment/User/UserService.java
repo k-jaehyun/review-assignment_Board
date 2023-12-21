@@ -9,8 +9,11 @@ import com.sparta.plusweekreviewassignment.jwt.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +24,7 @@ public class UserService {
     private final JwtUtil jwtUtil;
     private final EmailAuthService emailAuthService;
     private final EmailAuthRepository emailAuthRepository;
+    private final RedisTemplate<String , String > redisTemplate;
 
     public void signup(SignupRequestDto requestDto) {
         String newNickname= requestDto.getNickname();
@@ -45,6 +49,10 @@ public class UserService {
 
         // 인증번호 메일 보내기
         String sentCode = emailAuthService.sendVerificationCode(email);
+
+        // redis 활용
+        redisTemplate.opsForValue().set(email, sentCode, 5*60*1000, TimeUnit.MILLISECONDS);
+
         emailAuthRepository.save(new EmailAuth(sentCode, newNickname, passwordEncoder.encode(newPassword), email));
     }
 
@@ -52,6 +60,13 @@ public class UserService {
     public String verificateCode(String email, String verificateCode) {
         var emailAuth = emailAuthRepository.findByEmail(email).orElseThrow(()
                 -> new IllegalArgumentException("인증 가능한 이메일 주소가 아닙니다."));
+
+        // 5분이 지났는지 검증
+        if (redisTemplate.hasKey(email)==null) {
+            redisTemplate.delete(email);
+            throw new IllegalArgumentException("5분 초과, 다시 인증하세요");
+        }
+
         String nickname = emailAuth.getNickname();
         String password = emailAuth.getPassword();
 
@@ -61,6 +76,7 @@ public class UserService {
 
         //인증 완료되면 삭제
         emailAuthRepository.delete(emailAuth);
+        redisTemplate.delete(email);
         return nickname;
     }
 
