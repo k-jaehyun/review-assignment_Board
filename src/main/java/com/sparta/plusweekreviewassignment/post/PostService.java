@@ -6,6 +6,7 @@ import com.sparta.plusweekreviewassignment.jwt.JwtUtil;
 import com.sparta.plusweekreviewassignment.post.dto.PostListResponseDto;
 import com.sparta.plusweekreviewassignment.post.dto.PostRequestDto;
 import com.sparta.plusweekreviewassignment.post.dto.PostResponseDto;
+import com.sparta.plusweekreviewassignment.post.dto.PostResponseWithCommentDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -73,11 +74,11 @@ public class PostService {
     }
 
     // 게시글 조회
-    public PostResponseDto getPost(Long postId) {
+    public PostResponseWithCommentDto getPost(Long postId) {
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new IllegalArgumentException("선택한 게시물이 존재하지 않습니다."));
 
-        return new PostResponseDto(post);
+        return new PostResponseWithCommentDto(post);
     }
 
     // 게시글 수정

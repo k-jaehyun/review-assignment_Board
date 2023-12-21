@@ -7,6 +7,7 @@ import com.sparta.plusweekreviewassignment.jwt.JwtUtil;
 import com.sparta.plusweekreviewassignment.post.dto.PostListResponseDto;
 import com.sparta.plusweekreviewassignment.post.dto.PostRequestDto;
 import com.sparta.plusweekreviewassignment.post.dto.PostResponseDto;
+import com.sparta.plusweekreviewassignment.post.dto.PostResponseWithCommentDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -75,9 +76,9 @@ public class PostController {
 
     // 게시글 조회
     @GetMapping("{postId}")
-    public ResponseEntity<PostResponseDto> getPost(@PathVariable Long postId) {
-        PostResponseDto postResponseDto = postService.getPost(postId);
-        return ResponseEntity.ok().body(postResponseDto);
+    public ResponseEntity<PostResponseWithCommentDto> getPost(@PathVariable Long postId) {
+        PostResponseWithCommentDto postResponseWithCommentDto = postService.getPost(postId);
+        return ResponseEntity.ok().body(postResponseWithCommentDto);
     }
 
     // 게시글 수정
