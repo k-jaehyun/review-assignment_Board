@@ -35,10 +35,10 @@ public class Post extends Timestamped {
     @Column(name = "image", columnDefinition = "LONGBLOB")
     private byte[] image;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Comment> comments = new HashSet<>();
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Likes> likes = new HashSet<>();
 
     public Post(PostRequestDto postRequestDto, User user) {
