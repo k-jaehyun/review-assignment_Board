@@ -1,6 +1,7 @@
 package com.sparta.plusweekreviewassignment.comment;
 
 import com.sparta.plusweekreviewassignment.User.User;
+import com.sparta.plusweekreviewassignment.common.Timestamped;
 import com.sparta.plusweekreviewassignment.post.Post;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Comment {
+public class Comment extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

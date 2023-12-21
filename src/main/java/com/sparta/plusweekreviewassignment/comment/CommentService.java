@@ -2,12 +2,16 @@ package com.sparta.plusweekreviewassignment.comment;
 
 import com.sparta.plusweekreviewassignment.User.User;
 import com.sparta.plusweekreviewassignment.User.UserRepository;
+import com.sparta.plusweekreviewassignment.common.PageRequestDto;
 import com.sparta.plusweekreviewassignment.jwt.JwtUtil;
 import com.sparta.plusweekreviewassignment.post.Post;
 import com.sparta.plusweekreviewassignment.post.PostRepository;
-import com.sparta.plusweekreviewassignment.post.dto.PostResponseDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,6 +38,18 @@ public class CommentService {
         Post post = postRepository.findById(postId).orElseThrow(()
                 -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
         return commentRepository.findByPost(post).stream().map(CommentResponseDto::new).toList();
+    }
+
+    // Paging으로 댓글 목록 조회
+    public List<CommentResponseDto> getCommentListPaging(PageRequestDto pageRequestDto) {
+        Sort.Direction direction = pageRequestDto.getIsAsc() ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, pageRequestDto.getSortBy());
+        Pageable pageable = PageRequest.of(pageRequestDto.getPage()-1, pageRequestDto.getSize(),sort);
+
+        Page<Comment> comments = commentRepository.findAll(pageable);
+
+        return comments.map(CommentResponseDto::new).getContent();
+
     }
 
     @Transactional

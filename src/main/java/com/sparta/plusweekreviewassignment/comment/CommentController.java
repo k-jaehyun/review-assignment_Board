@@ -1,6 +1,7 @@
 package com.sparta.plusweekreviewassignment.comment;
 
 import com.sparta.plusweekreviewassignment.common.CommonResponseDto;
+import com.sparta.plusweekreviewassignment.common.PageRequestDto;
 import com.sparta.plusweekreviewassignment.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,13 @@ public class CommentController {
         return ResponseEntity.ok().body(commentResponseDtoList);
     }
 
+    // 댓글 목록 페이징 조회
+    @GetMapping("/page")
+    public List<CommentResponseDto> getCommentListPaging(@RequestBody PageRequestDto pageRequestDto) {
+        return commentService.getCommentListPaging(pageRequestDto);
+    }
+
+    // 댓글 수정
     @PatchMapping("{commentId}")
     public ResponseEntity<List<CommentResponseDto>> modifyComment(@RequestBody CommentRequestDto requestDto,
                                                                   @PathVariable Long postId,
@@ -41,6 +49,7 @@ public class CommentController {
         return ResponseEntity.ok().body(commentResponseDtoList);
     }
 
+    // 댓글 삭제
     @DeleteMapping("{commentId}")
     public ResponseEntity<CommonResponseDto> deleteComment(@PathVariable Long postId,
                                                            @PathVariable Long commentId,
