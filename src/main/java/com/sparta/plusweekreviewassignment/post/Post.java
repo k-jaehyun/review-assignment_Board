@@ -38,6 +38,9 @@ public class Post extends Timestamped {
     @OneToMany(mappedBy = "post")
     private Set<Comment> comments = new HashSet<>();
 
+    @OneToMany(mappedBy = "post")
+    private Set<Likes> likes = new HashSet<>();
+
     public Post(PostRequestDto postRequestDto, User user) {
         this.title = postRequestDto.getTitle();
         this.content = postRequestDto.getContent();
