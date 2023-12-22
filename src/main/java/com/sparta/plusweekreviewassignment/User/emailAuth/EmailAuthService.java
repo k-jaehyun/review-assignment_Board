@@ -36,7 +36,7 @@ public class EmailAuthService {
         // redis 활용
         redisTemplate.opsForValue().set(nickname, sentCode, 5*60*1000, TimeUnit.MILLISECONDS);
 
-        // 쿠키에 인증할 email 주소를 넣어보냄
+        // 쿠키에 인증할 nickname을 넣어보냄
         Cookie cookie = getCookieByNickname(nickname);
         setCookie(cookie, response);
 
