@@ -1,6 +1,7 @@
 package com.sparta.plusweekreviewassignment.comment;
 
-import com.sparta.plusweekreviewassignment.User.User;
+import com.sparta.plusweekreviewassignment.user.entity.User;
+import com.sparta.plusweekreviewassignment.comment.dto.CommentRequestDto;
 import com.sparta.plusweekreviewassignment.common.Timestamped;
 import com.sparta.plusweekreviewassignment.post.Post;
 import jakarta.persistence.*;

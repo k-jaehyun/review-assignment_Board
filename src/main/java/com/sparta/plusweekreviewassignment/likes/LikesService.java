@@ -1,7 +1,7 @@
 package com.sparta.plusweekreviewassignment.likes;
 
-import com.sparta.plusweekreviewassignment.User.User;
-import com.sparta.plusweekreviewassignment.User.UserRepository;
+import com.sparta.plusweekreviewassignment.user.entity.User;
+import com.sparta.plusweekreviewassignment.user.UserRepository;
 import com.sparta.plusweekreviewassignment.jwt.JwtUtil;
 import com.sparta.plusweekreviewassignment.post.Post;
 import com.sparta.plusweekreviewassignment.post.PostRepository;

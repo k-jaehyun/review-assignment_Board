@@ -1,4 +1,4 @@
-package com.sparta.plusweekreviewassignment.comment;
+package com.sparta.plusweekreviewassignment.comment.dto;
 
 import lombok.Getter;
 

@@ -1,7 +1,7 @@
 package com.sparta.plusweekreviewassignment.post;
 
-import com.sparta.plusweekreviewassignment.User.User;
-import com.sparta.plusweekreviewassignment.User.UserRepository;
+import com.sparta.plusweekreviewassignment.user.entity.User;
+import com.sparta.plusweekreviewassignment.user.UserRepository;
 import com.sparta.plusweekreviewassignment.jwt.JwtUtil;
 import com.sparta.plusweekreviewassignment.post.dto.PostListResponseDto;
 import com.sparta.plusweekreviewassignment.post.dto.PostRequestDto;

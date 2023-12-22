@@ -1,11 +1,7 @@
-package com.sparta.plusweekreviewassignment.User.emailAuth;
+package com.sparta.plusweekreviewassignment.user.service.emailAuth;
 
-import com.sparta.plusweekreviewassignment.User.UserBase;
-import com.sparta.plusweekreviewassignment.common.Timestamped;
+import com.sparta.plusweekreviewassignment.user.entity.UserBase;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

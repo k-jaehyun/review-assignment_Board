@@ -1,7 +1,6 @@
-package com.sparta.plusweekreviewassignment.User;
+package com.sparta.plusweekreviewassignment.user.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

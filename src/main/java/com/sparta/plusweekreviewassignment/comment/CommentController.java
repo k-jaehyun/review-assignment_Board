@@ -1,7 +1,9 @@
 package com.sparta.plusweekreviewassignment.comment;
 
-import com.sparta.plusweekreviewassignment.common.CommonResponseDto;
-import com.sparta.plusweekreviewassignment.common.PageRequestDto;
+import com.sparta.plusweekreviewassignment.comment.dto.CommentRequestDto;
+import com.sparta.plusweekreviewassignment.comment.dto.CommentResponseDto;
+import com.sparta.plusweekreviewassignment.common.dto.CommonResponseDto;
+import com.sparta.plusweekreviewassignment.common.dto.PageRequestDto;
 import com.sparta.plusweekreviewassignment.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

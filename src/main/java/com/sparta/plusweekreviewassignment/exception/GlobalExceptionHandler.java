@@ -1,6 +1,6 @@
 package com.sparta.plusweekreviewassignment.exception;
 
-import com.sparta.plusweekreviewassignment.common.CommonResponseDto;
+import com.sparta.plusweekreviewassignment.common.dto.CommonResponseDto;
 import com.sparta.plusweekreviewassignment.exception.fieldError.FieldErrorException;
 import com.sparta.plusweekreviewassignment.exception.fieldError.FieldErrorExceptionDto;
 import org.springframework.http.HttpStatus;

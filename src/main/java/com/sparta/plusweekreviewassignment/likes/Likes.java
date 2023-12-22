@@ -1,7 +1,7 @@
 package com.sparta.plusweekreviewassignment.likes;
 
 
-import com.sparta.plusweekreviewassignment.User.User;
+import com.sparta.plusweekreviewassignment.user.entity.User;
 import com.sparta.plusweekreviewassignment.post.Post;
 import jakarta.persistence.*;
 import lombok.Getter;

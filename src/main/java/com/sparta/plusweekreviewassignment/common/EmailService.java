@@ -1,4 +1,4 @@
-package com.sparta.plusweekreviewassignment.User.emailAuth;
+package com.sparta.plusweekreviewassignment.common;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;

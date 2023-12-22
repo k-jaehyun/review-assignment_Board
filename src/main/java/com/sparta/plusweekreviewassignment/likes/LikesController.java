@@ -1,6 +1,6 @@
 package com.sparta.plusweekreviewassignment.likes;
 
-import com.sparta.plusweekreviewassignment.common.CommonResponseDto;
+import com.sparta.plusweekreviewassignment.common.dto.CommonResponseDto;
 import com.sparta.plusweekreviewassignment.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

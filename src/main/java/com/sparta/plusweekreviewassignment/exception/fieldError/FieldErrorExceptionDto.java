@@ -1,6 +1,6 @@
 package com.sparta.plusweekreviewassignment.exception.fieldError;
 
-import com.sparta.plusweekreviewassignment.common.CommonResponseDto;
+import com.sparta.plusweekreviewassignment.common.dto.CommonResponseDto;
 import lombok.Getter;
 
 import java.util.List;

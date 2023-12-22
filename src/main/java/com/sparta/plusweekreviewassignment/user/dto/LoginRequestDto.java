@@ -1,4 +1,4 @@
-package com.sparta.plusweekreviewassignment.User.dto;
+package com.sparta.plusweekreviewassignment.user.dto;
 
 import lombok.Getter;
 

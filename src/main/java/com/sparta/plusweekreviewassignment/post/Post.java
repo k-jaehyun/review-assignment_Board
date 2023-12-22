@@ -1,6 +1,6 @@
 package com.sparta.plusweekreviewassignment.post;
 
-import com.sparta.plusweekreviewassignment.User.User;
+import com.sparta.plusweekreviewassignment.user.entity.User;
 import com.sparta.plusweekreviewassignment.comment.Comment;
 import com.sparta.plusweekreviewassignment.common.Timestamped;
 import com.sparta.plusweekreviewassignment.likes.Likes;

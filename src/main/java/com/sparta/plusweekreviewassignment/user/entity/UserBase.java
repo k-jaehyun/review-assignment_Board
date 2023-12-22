@@ -1,4 +1,4 @@
-package com.sparta.plusweekreviewassignment.User;
+package com.sparta.plusweekreviewassignment.user.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

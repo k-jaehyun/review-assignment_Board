@@ -1,4 +1,4 @@
-package com.sparta.plusweekreviewassignment.User.emailAuth;
+package com.sparta.plusweekreviewassignment.user.service.emailAuth;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

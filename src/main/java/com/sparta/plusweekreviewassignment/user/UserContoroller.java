@@ -1,11 +1,12 @@
-package com.sparta.plusweekreviewassignment.User;
+package com.sparta.plusweekreviewassignment.user;
 
-import com.sparta.plusweekreviewassignment.User.emailAuth.EmailAuthService;
-import com.sparta.plusweekreviewassignment.common.CommonResponseDto;
-import com.sparta.plusweekreviewassignment.User.dto.LoginRequestDto;
-import com.sparta.plusweekreviewassignment.User.dto.SignupRequestDto;
+import com.sparta.plusweekreviewassignment.user.service.emailAuth.EmailAuthService;
+import com.sparta.plusweekreviewassignment.common.dto.CommonResponseDto;
+import com.sparta.plusweekreviewassignment.user.dto.LoginRequestDto;
+import com.sparta.plusweekreviewassignment.user.dto.SignupRequestDto;
 import com.sparta.plusweekreviewassignment.exception.fieldError.FieldErrorDto;
 import com.sparta.plusweekreviewassignment.exception.fieldError.FieldErrorException;
+import com.sparta.plusweekreviewassignment.user.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

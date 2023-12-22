@@ -1,5 +1,6 @@
-package com.sparta.plusweekreviewassignment.User.emailAuth;
+package com.sparta.plusweekreviewassignment.user.service.emailAuth;
 
+import com.sparta.plusweekreviewassignment.common.EmailService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;

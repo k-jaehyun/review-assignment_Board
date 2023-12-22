@@ -1,6 +1,6 @@
 package com.sparta.plusweekreviewassignment.post;
 
-import com.sparta.plusweekreviewassignment.common.CommonResponseDto;
+import com.sparta.plusweekreviewassignment.common.dto.CommonResponseDto;
 import com.sparta.plusweekreviewassignment.exception.fieldError.FieldErrorDto;
 import com.sparta.plusweekreviewassignment.exception.fieldError.FieldErrorException;
 import com.sparta.plusweekreviewassignment.jwt.JwtUtil;
