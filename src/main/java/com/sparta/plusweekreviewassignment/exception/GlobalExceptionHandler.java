@@ -17,6 +17,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(commonResponseDto,HttpStatus.BAD_REQUEST);
     }
 
+    // 출력창에서 원하는 메세지만 출력하기 위해 FieldErrorException을 그대로 response에 넣지 않고 DTO를 생성했습니다
     @ExceptionHandler({FieldErrorException.class})
     public ResponseEntity<FieldErrorExceptionDto> FieldErrorExceptionHandler(FieldErrorException ex) {
         FieldErrorExceptionDto fieldErrorExceptionDto = new FieldErrorExceptionDto(ex.getMessage(),ex.getStatus(),ex.getFieldErrorList());
