@@ -22,11 +22,11 @@ public class EmailAuthService {
     private final RedisTemplate<String , String > redisTemplate;
     private final PasswordEncoder passwordEncoder;
 
-    public static final String EMAIL_AUTHORIZATION_HEADER = "EmailAuth";
+    public static final String Nickname_AUTHORIZATION_HEADER = "NicknameAuth";
 
-    public void checkAndSendVerificationCode(String newNickname, String newPassword, String email, HttpServletResponse response) {
+    public void checkAndSendVerificationCode(String nickname, String password, String email, HttpServletResponse response) {
         // 인증번호 보낸 내역이 있는지 확인
-        if (Boolean.TRUE.equals(redisTemplate.hasKey(email))) {
+        if (Boolean.TRUE.equals(redisTemplate.hasKey(nickname))) {
             throw new IllegalArgumentException("해당 이메일 주소로 인증번호가 이미 발송되었습니다.");
         }
 
@@ -34,22 +34,22 @@ public class EmailAuthService {
         String sentCode = sendVerificationCode(email);
 
         // redis 활용
-        redisTemplate.opsForValue().set(email, sentCode, 5*60*1000, TimeUnit.MILLISECONDS);
+        redisTemplate.opsForValue().set(nickname, sentCode, 5*60*1000, TimeUnit.MILLISECONDS);
 
         // 쿠키에 인증할 email 주소를 넣어보냄
-        Cookie cookie = getCookieByEmail(email);
+        Cookie cookie = getCookieByNickname(nickname);
         setCookie(cookie, response);
 
-        emailAuthRepository.save(new EmailAuth(sentCode, newNickname, passwordEncoder.encode(newPassword), email));
+        emailAuthRepository.save(new EmailAuth(sentCode, nickname, passwordEncoder.encode(password), email));
     }
 
-    public EmailAuth verifyVerificationCode(String email, String verificationCode) {
+    public EmailAuth verifyVerificationCode(String nickname, String verificationCode) {
         // 가장 최근에 만들어진 인증 데이터 조회 (5분 이내 인증에 실패했을 경우 중복 생성 될 수 있음)
-        var emailAuth = emailAuthRepository.findTopByEmailOrderByCreatedAtDesc(email).orElseThrow(()
-                -> new IllegalArgumentException("인증 가능한 이메일 주소가 아닙니다."));
+        var emailAuth = emailAuthRepository.findTopByNicknameOrderByCreatedAtDesc(nickname).orElseThrow(()
+                -> new IllegalArgumentException("인증 가능한 nickname이 아닙니다."));
 
         // 5분이 지났는지 검증
-        if (!redisTemplate.hasKey(email)) {
+        if (!redisTemplate.hasKey(nickname)) {
             throw new IllegalArgumentException("5분 초과, 다시 인증하세요");
         }
 
@@ -62,9 +62,9 @@ public class EmailAuthService {
     }
 
     public void endEmailAuth(EmailAuth emailAuth, HttpServletResponse response) {
-        redisTemplate.delete(emailAuth.getEmail());
+        redisTemplate.delete(emailAuth.getNickname());
         emailAuthRepository.delete(emailAuth);
-        Cookie cookie = new Cookie(EMAIL_AUTHORIZATION_HEADER, null);
+        Cookie cookie = new Cookie(Nickname_AUTHORIZATION_HEADER, null);
         cookie.setMaxAge(0);
         cookie.setPath("/");
         response.addCookie(cookie);
@@ -79,8 +79,8 @@ public class EmailAuthService {
         return generatedCode;
     }
 
-    private Cookie getCookieByEmail(String email){
-        Cookie cookie = new Cookie(EMAIL_AUTHORIZATION_HEADER, email);
+    private Cookie getCookieByNickname(String nickname){
+        Cookie cookie = new Cookie(Nickname_AUTHORIZATION_HEADER, nickname);
         cookie.setPath("/");
         cookie.setMaxAge(5*60);
         return cookie;

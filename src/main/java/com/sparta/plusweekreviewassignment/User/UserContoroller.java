@@ -44,7 +44,7 @@ public class UserContoroller {
 
     @GetMapping("/signup/code/{verificationCode}")
     public ResponseEntity<CommonResponseDto> verificateCode(@PathVariable String verificationCode,
-                                                            @CookieValue(EmailAuthService.EMAIL_AUTHORIZATION_HEADER) String value,
+                                                            @CookieValue(EmailAuthService.Nickname_AUTHORIZATION_HEADER) String value,
                                                             HttpServletResponse response) {
         String nickname = userService.verificateCode(verificationCode, value, response);
         return ResponseEntity.ok().body(new CommonResponseDto(nickname+"님 회원가입 완료.",HttpStatus.OK.value()));

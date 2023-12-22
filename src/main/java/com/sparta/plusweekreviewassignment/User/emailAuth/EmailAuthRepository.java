@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 public interface EmailAuthRepository extends JpaRepository<EmailAuth,Long> {
-    Optional<EmailAuth> findTopByEmailOrderByCreatedAtDesc(String email);
-
     void deleteByCreatedAtBefore(LocalDateTime fiveMinAgo);
+
+    Optional<EmailAuth> findTopByNicknameOrderByCreatedAtDesc(String nickname);
 }
