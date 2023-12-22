@@ -11,11 +11,11 @@ public class EmailService {
 
     private final JavaMailSender javaMailSender;
 
-    public void sendVerificationCodeByEmail(String to, String subject , String verificationCode) {
+    public void sendVerificationCodeByEmail(String to, String subject , String text) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
         message.setSubject(subject);
-        message.setText("인증번호: " + verificationCode);
+        message.setText(text);
 
         javaMailSender.send(message);
     }

@@ -43,31 +43,6 @@ public class EmailAuthService {
         emailAuthRepository.save(new EmailAuth(sentCode, newNickname, passwordEncoder.encode(newPassword), email));
     }
 
-    public String sendVerificationCode(String email) {
-        String sentCode = generateRandomCode();
-
-        // 이메일로 인증 번호 발송
-        emailService.sendVerificationCodeByEmail(email, "회원가입을 위한 인증 번호 메일입니다." , sentCode);
-        return sentCode;
-    }
-
-    public Cookie getCookieByEmail(String email){
-        Cookie cookie = new Cookie(EMAIL_AUTHORIZATION_HEADER, email);
-        cookie.setPath("/");
-        return cookie;
-    }
-
-    public void setCookie(Cookie cookie, HttpServletResponse response) {
-        response.addCookie(cookie);
-    }
-
-    private String generateRandomCode() {
-        // 랜덤한 6자리 숫자 생성
-        Random random = new Random();
-        int code = 100000 + random.nextInt(900000);
-        return String.valueOf(code);
-    }
-
     public EmailAuth verifyVerificationCode(String email, String verificationCode) {
         // 가장 최근에 만들어진 인증 데이터 조회 (5분 이내 인증에 실패했을 경우 중복 생성 될 수 있음)
         var emailAuth = emailAuthRepository.findTopByEmailOrderByCreatedAtDesc(email).orElseThrow(()
@@ -86,6 +61,43 @@ public class EmailAuthService {
         return emailAuth;
     }
 
+    public void endEmailAuth(EmailAuth emailAuth, HttpServletResponse response) {
+        redisTemplate.delete(emailAuth.getEmail());
+        emailAuthRepository.delete(emailAuth);
+        Cookie cookie = new Cookie(EMAIL_AUTHORIZATION_HEADER, null);
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        response.addCookie(cookie);
+    }
+
+
+    private String sendVerificationCode(String email) {
+        String generatedCode = generateRandomCode();
+
+        // 이메일로 인증 번호 발송
+        emailService.sendVerificationCodeByEmail(email, "회원가입을 위한 인증 번호 메일입니다." , "인증번호: "+generatedCode);
+        return generatedCode;
+    }
+
+    private Cookie getCookieByEmail(String email){
+        Cookie cookie = new Cookie(EMAIL_AUTHORIZATION_HEADER, email);
+        cookie.setPath("/");
+        cookie.setMaxAge(5*60);
+        return cookie;
+    }
+
+    private void setCookie(Cookie cookie, HttpServletResponse response) {
+        response.addCookie(cookie);
+    }
+
+    private String generateRandomCode() {
+        // 랜덤한 6자리 숫자 생성
+        Random random = new Random();
+        int code = 100000 + random.nextInt(900000);
+        return String.valueOf(code);
+    }
+
+
 
     // 이메일인증 5분 지났는데도 완료되지않은 데이터 삭제
     @Transactional
@@ -95,9 +107,5 @@ public class EmailAuthService {
         emailAuthRepository.deleteByCreatedAtBefore(fiveMinAgo);
     }
 
-    public void deleteEmailAuth(EmailAuth emailAuth) {
-        redisTemplate.delete(emailAuth.getEmail());
-        emailAuthRepository.delete(emailAuth);
-    }
 }
 

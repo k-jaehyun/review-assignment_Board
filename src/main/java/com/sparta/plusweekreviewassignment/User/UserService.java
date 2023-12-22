@@ -50,7 +50,7 @@ public class UserService {
     }
 
     // 이메일 인증 및 User 생성
-    public String verificateCode(String verificationCode, String email) {
+    public String verificateCode(String verificationCode, String email, HttpServletResponse response) {
         EmailAuth emailAuth = emailAuthService.verifyVerificationCode(email,verificationCode);
 
         String nickname = emailAuth.getNickname();
@@ -58,7 +58,7 @@ public class UserService {
         userRepository.save(new User(nickname,password,email));
 
         //인증 완료되면 삭제
-        emailAuthService.deleteEmailAuth(emailAuth);
+        emailAuthService.endEmailAuth(emailAuth, response);
 
         return nickname;
     }
