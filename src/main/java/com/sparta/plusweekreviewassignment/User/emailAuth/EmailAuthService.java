@@ -22,7 +22,7 @@ public class EmailAuthService {
     private final RedisTemplate<String , String > redisTemplate;
     private final PasswordEncoder passwordEncoder;
 
-    public static final String Nickname_AUTHORIZATION_HEADER = "NicknameAuth";
+    public static final String NICkNAME_AUTHORIZATION_HEADER = "NicknameAuth";
 
     public void checkAndSendVerificationCode(String nickname, String password, String email, HttpServletResponse response) {
         // 인증번호 보낸 내역이 있는지 확인
@@ -64,7 +64,7 @@ public class EmailAuthService {
     public void endEmailAuth(EmailAuth emailAuth, HttpServletResponse response) {
         redisTemplate.delete(emailAuth.getNickname());
         emailAuthRepository.delete(emailAuth);
-        Cookie cookie = new Cookie(Nickname_AUTHORIZATION_HEADER, null);
+        Cookie cookie = new Cookie(NICkNAME_AUTHORIZATION_HEADER, null);
         cookie.setMaxAge(0);
         cookie.setPath("/");
         response.addCookie(cookie);
@@ -80,7 +80,7 @@ public class EmailAuthService {
     }
 
     private Cookie getCookieByNickname(String nickname){
-        Cookie cookie = new Cookie(Nickname_AUTHORIZATION_HEADER, nickname);
+        Cookie cookie = new Cookie(NICkNAME_AUTHORIZATION_HEADER, nickname);
         cookie.setPath("/");
         cookie.setMaxAge(5*60);
         return cookie;
