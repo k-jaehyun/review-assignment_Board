@@ -1,5 +1,6 @@
 package com.sparta.plusweekreviewassignment.User;
 
+import com.sparta.plusweekreviewassignment.User.emailAuth.EmailAuthService;
 import com.sparta.plusweekreviewassignment.common.CommonResponseDto;
 import com.sparta.plusweekreviewassignment.User.dto.LoginRequestDto;
 import com.sparta.plusweekreviewassignment.User.dto.SignupRequestDto;
@@ -23,9 +24,11 @@ public class UserContoroller {
 
     private final UserService userService;
 
-    // 회원가입
+    // 회원가입 입력 및 이메일 인증
     @PostMapping("/signup")
-    public ResponseEntity<CommonResponseDto> signup(@Valid @RequestBody SignupRequestDto requestDto, BindingResult bindingResult) {
+    public ResponseEntity<CommonResponseDto> signup(@Valid @RequestBody SignupRequestDto requestDto,
+                                                    BindingResult bindingResult,
+                                                    HttpServletResponse response) {
         // validation검증
         List<FieldError> fieldErrorList = bindingResult.getFieldErrors();
         if (!fieldErrorList.isEmpty()) {
@@ -34,15 +37,15 @@ public class UserContoroller {
         }
 
         // 회원가입 로직 (인증 메일 발송)
-        userService.signup(requestDto);
+        userService.signup(requestDto,response);
 
-        return ResponseEntity.ok().body(new CommonResponseDto("인증번호를 입력해주세요!", HttpStatus.OK.value()));
+        return ResponseEntity.ok().body(new CommonResponseDto("인증번호를 입력해주세요!", HttpStatus.ACCEPTED.value()));
     }
 
-    @GetMapping("/signup/email/{email}/code/{verificationCode}")
-    public ResponseEntity<CommonResponseDto> verificateCode(@PathVariable String email,
-                                                            @PathVariable String verificationCode) {
-        String nickname = userService.verificateCode(email, verificationCode);
+    @GetMapping("/signup/code/{verificationCode}")
+    public ResponseEntity<CommonResponseDto> verificateCode(@PathVariable String verificationCode,
+                                                            @CookieValue(EmailAuthService.EMAIL_AUTHORIZATION_HEADER) String value) {
+        String nickname = userService.verificateCode(verificationCode, value);
         return ResponseEntity.ok().body(new CommonResponseDto(nickname+"님 회원가입 완료.",HttpStatus.OK.value()));
     }
 

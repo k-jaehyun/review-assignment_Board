@@ -3,17 +3,13 @@ package com.sparta.plusweekreviewassignment.User;
 import com.sparta.plusweekreviewassignment.User.dto.LoginRequestDto;
 import com.sparta.plusweekreviewassignment.User.dto.SignupRequestDto;
 import com.sparta.plusweekreviewassignment.User.emailAuth.EmailAuth;
-import com.sparta.plusweekreviewassignment.User.emailAuth.EmailAuthRepository;
 import com.sparta.plusweekreviewassignment.User.emailAuth.EmailAuthService;
 import com.sparta.plusweekreviewassignment.jwt.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -23,10 +19,8 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final EmailAuthService emailAuthService;
-    private final EmailAuthRepository emailAuthRepository;
-    private final RedisTemplate<String , String > redisTemplate;
 
-    public void signup(SignupRequestDto requestDto) {
+    public void signup(SignupRequestDto requestDto, HttpServletResponse response) {
         String newNickname= requestDto.getNickname();
         String newPassword= requestDto.getPassword();
         String newPasswordCheck= requestDto.getPasswordCheck();
@@ -47,36 +41,25 @@ public class UserService {
             throw  new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
-        // 인증번호 메일 보내기
-        String sentCode = emailAuthService.sendVerificationCode(email);
+        // email 중복여부 확인
+        if (userRepository.findByEmail(email).isPresent()) {
+            throw new IllegalArgumentException("이미 존재하는 email입니다.");
+        }
 
-        // redis 활용
-        redisTemplate.opsForValue().set(email, sentCode, 5*60*1000, TimeUnit.MILLISECONDS);
-
-        emailAuthRepository.save(new EmailAuth(sentCode, newNickname, passwordEncoder.encode(newPassword), email));
+        emailAuthService.checkAndSendVerificationCode(newNickname, newPassword, email, response);
     }
 
     // 이메일 인증 및 User 생성
-    public String verificateCode(String email, String verificateCode) {
-        var emailAuth = emailAuthRepository.findByEmail(email).orElseThrow(()
-                -> new IllegalArgumentException("인증 가능한 이메일 주소가 아닙니다."));
-
-        // 5분이 지났는지 검증
-        if (redisTemplate.hasKey(email)==null) {
-            redisTemplate.delete(email);
-            throw new IllegalArgumentException("5분 초과, 다시 인증하세요");
-        }
+    public String verificateCode(String verificationCode, String email) {
+        EmailAuth emailAuth = emailAuthService.verifyVerificationCode(email,verificationCode);
 
         String nickname = emailAuth.getNickname();
         String password = emailAuth.getPassword();
-
-        emailAuthService.verifyVerificationCode(email,verificateCode);
-
         userRepository.save(new User(nickname,password,email));
 
         //인증 완료되면 삭제
-        emailAuthRepository.delete(emailAuth);
-        redisTemplate.delete(email);
+        emailAuthService.deleteEmailAuth(emailAuth);
+
         return nickname;
     }
 

@@ -1,5 +1,6 @@
 package com.sparta.plusweekreviewassignment.User.emailAuth;
 
+import com.sparta.plusweekreviewassignment.common.Timestamped;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-public class EmailAuth {
+public class EmailAuth extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
